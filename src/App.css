@@ -1,0 +1,67 @@
+h1{
+  font-size: 26px;
+  color: #3F4254;
+  line-height: 40px;
+}
+
+
+h2{
+  font-size: 22px;
+  color: #3F4254;
+  line-height: 30px;
+}
+
+h3{
+  font-size: 18px;
+  color: #3F4254;
+  line-height: 26px;
+}
+
+h4{
+  font-size: 15px;
+  color: #3F4254;
+  line-height: 24px;
+}
+
+.subtext{
+  font-style: 13px;
+  line-height: 21px;
+  color: #3F4254;
+}
+
+h6{
+  font-size: 12px;
+}
+
+.sidebar{
+  width: 6%;
+  z-index: 1000 !important;
+}
+.container-div{
+  height: 100%;
+  display: flex;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  height: 100%;
+
+}
+
+
+.content{
+  min-height: 100vh;
+  height: 100%;
+  flex: 1;
+  padding: 0;
+  width: calc(100% - 6%);
+  padding-top: 4rem;
+}
+
+
+.subHeading{
+  font-size: 16px;
+}
+
+.subPoints{
+  font-size: 14px;
+}

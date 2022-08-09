@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="63" viewBox="0 0 64 63">
+  <defs>
+    <filter id="Rectangle_13" x="0" y="0" width="64" height="63" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-opacity="0.282"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="Add_Button" data-name="Add Button" transform="translate(9 6)">
+    <g transform="matrix(1, 0, 0, 1, -9, -6)" filter="url(#Rectangle_13)">
+      <rect id="Rectangle_13-2" data-name="Rectangle 13" width="46" height="45" rx="22.5" transform="translate(9 6)" fill="#777afc"/>
+    </g>
+    <g id="Icon_feather-user-plus" data-name="Icon feather-user-plus" transform="translate(15.471 14.534)">
+      <path id="Path_3162" data-name="Path 3162" d="M13.942,27.477V25.818A3.318,3.318,0,0,0,10.624,22.5H4.818A3.318,3.318,0,0,0,1.5,25.818v1.659" transform="translate(-1.5 -11.545)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"/>
+      <path id="Path_3163" data-name="Path 3163" d="M14.863,8.556A4.056,4.056,0,1,1,10.806,4.5a4.056,4.056,0,0,1,4.056,4.056Z" transform="translate(-4.586 -4.5)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"/>
+      <path id="Path_3164" data-name="Path 3164" d="M30,12v5.3" transform="translate(-12.861 -6.347)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"/>
+      <path id="Path_3165" data-name="Path 3165" d="M31.158,16.5H25.5" transform="translate(-11.19 -8.196)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"/>
+    </g>
+  </g>
+</svg>

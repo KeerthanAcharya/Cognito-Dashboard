@@ -1,0 +1,113 @@
+body{
+    overflow-x: hidden;
+}
+
+
+.rowContainer {
+    height: 100vh;
+}
+
+.leftside {
+    background-color: #797fd1;
+    /* grid-column: 1;
+    grid-row: 1; */
+}
+
+/* Left Side Panel */
+
+.rapIconContainer {
+    min-height: 90vh;
+    min-width: 50vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.infoContainer {
+    height: auto;
+}
+
+.rapIcon {
+    margin-left: 30;
+    height: 100px;
+    width: 300px;
+    text-align: center;
+    margin-right: 60px;
+}
+
+.button {
+    background-color: #30346b;
+    font-size: 15px;
+    text-transform: none;
+    color: '#ffff';
+    border-radius: 5px;
+}
+
+.button:hover {
+    color: #2b339d;
+}
+
+.input {
+    width: 90%;
+    padding: 2%;
+}
+
+.form-control {
+    background-color: #e5e5e5;
+    padding: 3%;
+}
+
+.subtext {
+    color: #858585;
+    font-size: medium;
+}
+
+.list-divider-pipe li {
+    display: inline-block;
+}
+
+.list-divider-pipe li + li::before {
+    content: '|';
+    padding: 0 1em 0 1em;
+}
+
+.download-links {
+    color: #fff;
+}
+
+.list-divider-pipe a,
+a:link,
+a:active {
+    /* color: #fff; */
+    text-decoration: none;
+    border-radius: 2px;
+}
+
+.pipe-width li {
+    display: inline-block;
+}
+
+.pipe-width li + li::before {
+    content: '|';
+    padding: 0 1em 0 1em;
+}
+
+.pipe-width a,
+a:link,
+a:active {
+    /* color: #fff; */
+    text-decoration: none;
+    border-radius: 2px;
+}
+.action-label-link:hover{
+    cursor: pointer;
+}
+.action-label{
+    font-size: 12px;
+    color: gray;
+    margin-top: 0px !important;
+}
+.signupAsk{
+    margin-top: -30px !important;
+    color: gray;
+}

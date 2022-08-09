@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="63" viewBox="0 0 64 63">
+  <defs>
+    <filter id="Rectangle_13" x="0" y="0" width="64" height="63" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-opacity="0.282"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="Add_Button" data-name="Add Button" transform="translate(9 6)">
+    <g transform="matrix(1, 0, 0, 1, -9, -6)" filter="url(#Rectangle_13)">
+      <rect id="Rectangle_13-2" data-name="Rectangle 13" width="46" height="45" rx="22.5" transform="translate(9 6)" fill="#777afc"/>
+    </g>
+    <g id="Icon_feather-user-plus" data-name="Icon feather-user-plus" transform="translate(15.471 14.534)">
+      <rect id="Rectangle_725" data-name="Rectangle 725" width="23" height="23" transform="translate(-5.471 -3.534)" fill="#4044ef" opacity="0.36"/>
+      <path id="Path_3164" data-name="Path 3164" d="M30,12v6.584" transform="translate(-12.388 2.985)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"/>
+      <path id="Path_3165" data-name="Path 3165" d="M32.1,16.5H25.5" transform="translate(-11.19 1.804)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"/>
+      <path id="Icon_awesome-list-ul" data-name="Icon awesome-list-ul" d="M1.583,3.375A1.583,1.583,0,1,0,3.166,4.958,1.583,1.583,0,0,0,1.583,3.375Zm0,5.277a1.583,1.583,0,1,0,1.583,1.583A1.583,1.583,0,0,0,1.583,8.652Zm0,5.277a1.583,1.583,0,1,0,1.583,1.583,1.583,1.583,0,0,0-1.583-1.583Zm14.775.528H5.8a.528.528,0,0,0-.528.528v1.055a.528.528,0,0,0,.528.528H16.358a.528.528,0,0,0,.528-.528V14.984A.528.528,0,0,0,16.358,14.456Zm0-10.553H5.8a.528.528,0,0,0-.528.528V5.486a.528.528,0,0,0,.528.528H16.358a.528.528,0,0,0,.528-.528V4.43A.528.528,0,0,0,16.358,3.9Zm0,5.277H5.8a.528.528,0,0,0-.528.528v1.055a.528.528,0,0,0,.528.528H16.358a.528.528,0,0,0,.528-.528V9.707A.528.528,0,0,0,16.358,9.179Z" transform="translate(-1.746 -2.109)" fill="#fff"/>
+    </g>
+  </g>
+</svg>

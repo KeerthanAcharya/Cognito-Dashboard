@@ -1,0 +1,13 @@
+.main-cont{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 500px;
+    padding: 35px;
+
+}
+
+.lable-2{
+    font-weight: 900;
+}

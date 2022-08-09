@@ -1,0 +1,16 @@
+
+.date-selecter{
+    /* height:  !important; */
+    /* display: block; */
+    width: 200px !important;
+    padding: 5px;
+    margin-right: 10px;
+}
+
+.message-for-upload{
+    font-size: 13px;
+}
+
+.filter-btn{
+    margin-right: 15px;
+}
