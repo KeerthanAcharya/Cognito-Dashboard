@@ -112,27 +112,27 @@ const Dashboard = ({ setUser }: { setUser: Function }) => {
 
             <Row className='spacing-'>
                 <Col>
-                    <h2 className='font-weight-bold p-3'>Lead Generated Report</h2>
+                    {/* <h2 className='font-weight-bold p-3'>Lead Generated Report</h2> */}
                     <LeadGeneratedReport dateFiltred={data && data} />
                 </Col>
             </Row>
 
             <Row className='spacing-1 my-3 pl-3'>
                 <Col>
-                    <h2 className='font-weight-bold p-3'>Lead By Model Report</h2>
+                    {/* <h2 className='font-weight-bold p-3'>Lead By Model Report</h2> */}
                     <LeadByModelReport dateFiltred={data && data} />
                 </Col>
             </Row>
 
             <Row className='spacing-1 my-3 p-3'>
                 <Col>
-                    <h2 className='font-weight-bold'>Leads by Year</h2>
+                    {/* <h2 className='font-weight-bold'>Leads by Year</h2> */}
                     <LeadByYear dateFiltred={data && data} />
                 </Col>
             </Row>
             <Row className='spacing-1 my-3 p-3'>
                 <Col>
-                    <h2 className='font-weight-bold'>BDC Stats</h2>
+                    {/* <h2 className='font-weight-bold'>BDC Stats</h2> */}
                     <BdcStats dateFiltred={data && data} />
                 </Col>
             </Row>

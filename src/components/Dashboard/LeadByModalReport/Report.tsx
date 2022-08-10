@@ -216,7 +216,9 @@ function Report({ dateFiltred }: any) {
     console.log('myData', myData)
     return loading ? <Loader /> : (
         <Row style={{ width: '500px' }} className="container row w-100 container row w-100 d-flex justify-content-center m-auto">
+            <h2 className='font-weight-bold py-2'>Lead By Model Report</h2>
             <Col className='spacing-1'   >
+            
                 <table className="table">
                     <thead className="thead-dark bg-dark text-white">
                         <tr>
