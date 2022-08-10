@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { Container, Button, InputGroup, FormControl, Spinner, Form } from 'react-bootstrap';
 import { Redirect, useHistory } from 'react-router';
 import { toastify } from '../common/notification';
@@ -8,6 +8,7 @@ import config from '../../config.json';
 import { Types, Roles } from '../../utils/utils'
 import { UserContext } from '../common/UserContext';
 const Signup = () => {
+    let roleSelect = useRef<any>(null)
     const [firstName, setfirstName] = useState<string>('');
     const [lastName, setlastName] = useState<string>('');
     const [email, setemail] = useState<string>('');
@@ -24,6 +25,10 @@ const Signup = () => {
 
     const handleSignup = (e: React.SyntheticEvent) => {
         e.preventDefault();
+
+        console.log('type', type)
+        console.log('role', role)
+
         if (!firstName || !lastName || !email || !password || !role || !type) return;
 
         setIsLoading(true);
@@ -97,6 +102,11 @@ const Signup = () => {
         )
         setFilteredRole(filterd)
         console.log('filterd', filtedRoles)
+        roleSelect.current.selectedIndex = 0
+        setRole(null)
+        // let doc= document.getElementById('roleSelect') as any
+        // doc.selectedIndex = -1;
+
 
     }
 
@@ -201,6 +211,8 @@ const Signup = () => {
                                 </InputGroup>
                                 <InputGroup className='input w-100'>
                                     <Form.Select
+                                        id='roleSelect'
+                                        ref={roleSelect}
                                         onChange={(e: any) => { setRole(e.target.value) }}
                                         aria-describedby='basic-addon1'
                                     >

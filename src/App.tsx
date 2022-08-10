@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
 
-import { BrowserRouter as Router, Switch, Route, Redirect, RouteProps } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Redirect, RouteProps, HashRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 
@@ -44,15 +44,15 @@ function ProtectedRoute({ isAuthenticated, ...routeProps }: ProtectedRouteProps)
 const queryClient = new QueryClient();
 
 function App() {
-    const[soldData,setSoldData]=useState<any>("")
+    const [soldData, setSoldData] = useState<any>("")
     const [user, setUser] = useState({
         id: '',
         email: '',
         name: '',
         role: '',
-        soldvalue:'0',
-        fromDate:'',
-        toDate:'',
+        soldvalue: '0',
+        fromDate: '',
+        toDate: '',
         type: '',
         ID: '',
         authToken: '',
@@ -78,11 +78,11 @@ function App() {
                             email: data.data.email,
                             name: data.data.first_name + ' ' + data.data.last_name,
                             role: data.data.role,
-                            soldvalue:'0',
-                            fromDate:'',
+                            soldvalue: '0',
+                            fromDate: '',
                             type: data.data.type,
                             ID: data.data.ID,
-                            toDate:'',
+                            toDate: '',
                             authToken: token,
                         });
 
@@ -117,7 +117,7 @@ function App() {
     }
     return (
         <QueryClientProvider client={queryClient}>
-            <Router>
+            <HashRouter>
                 <UserContext.Provider
                     value={{
                         id: user.id,
@@ -125,9 +125,9 @@ function App() {
                         role: user.role,
                         email: user.email,
                         authToken: user.authToken,
-                        soldvalue:user.soldvalue,
-                        fromDate:user.fromDate,
-                        toDate:user.toDate,
+                        soldvalue: user.soldvalue,
+                        fromDate: user.fromDate,
+                        toDate: user.toDate,
                         type: user.type,
                         ID: user.ID,
                         setUser: setUser,
@@ -143,7 +143,7 @@ function App() {
                             <ProtectedRoute
                                 isAuthenticated={isAuthenticate()}
                                 path='/dashboard'
-                                render={() => <WithBars render={() => <Dashboard setUser={setUser}/>} />}
+                                render={() => <WithBars render={() => <Dashboard setUser={setUser} />} />}
                                 exact
                             />
                             {/* <ProtectedRoute
@@ -212,7 +212,7 @@ function App() {
                         </Switch>
                     </div>
                 </UserContext.Provider>
-            </Router>
+            </HashRouter>
             <ToastContainer
                 position='top-right'
                 autoClose={4000}
