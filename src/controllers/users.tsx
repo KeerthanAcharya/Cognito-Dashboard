@@ -5,8 +5,9 @@ import { toastify } from '../components/common/notification';
 const url = config['baseHost_backend'];
 
 export const selfUser = (token: string) =>
+
     axios
-        .get(`${url}/refresh-token`, {
+        .get(`${url}/drm-refersh-token`, {
             headers: {
                 Authorization: token,
             },

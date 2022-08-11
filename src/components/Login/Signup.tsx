@@ -7,12 +7,15 @@ import './signup.css'
 import config from '../../config.json';
 import { Types, Roles } from '../../utils/utils'
 import { UserContext } from '../common/UserContext';
+import Loader from '../common/Loader';
+import LoadingBar from '../common/LoadingBar';
+
 const Signup = () => {
     let roleSelect = useRef<any>(null)
     const [firstName, setfirstName] = useState<string>('');
     const [lastName, setlastName] = useState<string>('');
     const [email, setemail] = useState<string>('');
-    const [password, setPassword] = useState<any>(' ');
+    const [password, setPassword] = useState<any>('');
     const [isSuccess, setIsSuccess] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -20,31 +23,31 @@ const Signup = () => {
     const [type, setType] = useState<any>(null)
     const { authToken } = useContext(UserContext);
     const [role, setRole] = useState<any>(null)
-
+    const [filteredUsers, setFilteredusers] = useState<any>(null)
+    const [selelectID, setSelelectID] = useState<any>(null)
+    const [loading, setLoading] = useState(false)
     const history = useHistory();
 
     const handleSignup = (e: React.SyntheticEvent) => {
         e.preventDefault();
 
-        console.log('type', type)
-        console.log('role', role)
-
+   
         if (!firstName || !lastName || !email || !password || !role || !type) return;
 
         setIsLoading(true);
 
-        const url = config['baseHost_backend'] + '/create-user';
+        const url = config['baseHost_backend'] + '/drm-create-user';
 
-        var date = new Date() as any;
-        var components = [
-            date.getYear(),
-            date.getMonth(),
-            date.getDate(),
-            date.getHours(),
-            date.getMinutes(),
-            date.getSeconds(),
-            date.getMilliseconds()
-        ];
+        // var date = new Date() as any;
+        // var components = [
+        //     date.getYear(),
+        //     date.getMonth(),
+        //     date.getDate(),
+        //     date.getHours(),
+        //     date.getMinutes(),
+        //     date.getSeconds(),
+        //     date.getMilliseconds()
+        // ];
 
         const options = {
             first_name: firstName,
@@ -52,7 +55,7 @@ const Signup = () => {
             email: email,
             password: password,
             is_active: 1,
-            ID: components.join(""),
+            dealerORcorporateID: selelectID,
             role: role,
             type: type,
             contactdetails: {
@@ -61,14 +64,11 @@ const Signup = () => {
                 communication_address: null,
             },
         };
+        console.log("🚀 ~ file: Signup.tsx ~ line 67 ~ handleSignup ~ options", options)
 
 
         axios
-            .post(`${url}`, options, {
-                headers: {
-                    authorization: `Bearer ${authToken}`,
-                },
-            })
+            .post(`${url}`, options)
             .then((response) => {
                 console.log('create user response', response);
 
@@ -91,6 +91,24 @@ const Signup = () => {
             });
     };
 
+    const fetchUsersByType = async (val: any) => {
+        setLoading(true)
+        const url = config['baseHost_backend'] + '/drm-create-user';
+        let body = {
+            selectType: {
+                type: val
+            }
+        }
+        axios.post(url, body).then((resp) => {
+            console.log('Type responce', resp)
+            setFilteredusers(resp?.data?.body)
+            setLoading(false)
+        }).catch((err) => {
+            console.log('Error', err)
+            setLoading(false)
+        })
+    }
+
 
     const handleTypeChange = (e: any) => {
         setType(e.target.value)
@@ -104,16 +122,14 @@ const Signup = () => {
         console.log('filterd', filtedRoles)
         roleSelect.current.selectedIndex = 0
         setRole(null)
-        // let doc= document.getElementById('roleSelect') as any
-        // doc.selectedIndex = -1;
 
+        fetchUsersByType(e.target.value)
 
     }
 
     return (
         <div>
-            {isSuccess ? (
-                <Redirect to='/dashboard' />) : ""}
+            {<LoadingBar isActive={loading} />}
             <>
                 <h1 className='lable-2 text-center'>SignUp here</h1>
                 <div>
@@ -122,6 +138,8 @@ const Signup = () => {
                             <div className='main-cont'>
                                 <InputGroup className='input w-100'>
                                     <FormControl
+                                        size='sm'
+                                        className='p-2'
                                         placeholder='First Name'
                                         aria-label='FirstName'
                                         aria-describedby='basic-addon1'
@@ -132,6 +150,8 @@ const Signup = () => {
                                 </InputGroup>
                                 <InputGroup className='input w-100'>
                                     <FormControl
+                                        size='sm'
+                                        className='p-2'
                                         placeholder='Last Name'
                                         aria-label='LastName'
                                         aria-describedby='basic-addon1'
@@ -142,6 +162,8 @@ const Signup = () => {
                                 </InputGroup>
                                 <InputGroup className='input w-100'>
                                     <FormControl
+                                        size='sm'
+                                        className='p-2'
                                         placeholder='Email'
                                         aria-label='Email'
                                         aria-describedby='basic-addon1'
@@ -152,6 +174,8 @@ const Signup = () => {
                                 </InputGroup>
                                 <InputGroup className='input w-100'>
                                     <FormControl
+                                        size='sm'
+                                        className='p-2'
                                         placeholder='Password'
                                         aria-label='password'
                                         name='password'
@@ -200,6 +224,8 @@ const Signup = () => {
                                 </InputGroup>
                                 <InputGroup className='input w-100'>
                                     <Form.Select
+                                        className='p-2'
+                                        size='sm'
                                         aria-describedby='basic-addon1'
                                         onChange={handleTypeChange}
                                     >
@@ -211,6 +237,8 @@ const Signup = () => {
                                 </InputGroup>
                                 <InputGroup className='input w-100'>
                                     <Form.Select
+                                        className='p-2'
+                                        size='sm'
                                         id='roleSelect'
                                         ref={roleSelect}
                                         onChange={(e: any) => { setRole(e.target.value) }}
@@ -222,6 +250,21 @@ const Signup = () => {
                                         ))}
                                     </Form.Select>
                                 </InputGroup>
+
+                                {filteredUsers && <InputGroup className='input w-100'>
+                                    <Form.Select
+                                        className='p-2'
+                                        size='sm'
+                                        id='roleSelect'
+                                        onChange={(e: any) => { setSelelectID(e.target.value) }}
+                                        aria-describedby='basic-addon1'
+                                    >
+                                        <option value="null">Select {type}</option>
+                                        {filteredUsers?.map((filter: any) => (
+                                            <option value={filter.ID}>{type === 'dealer' ? filter.first_name + ' ' + filter.last_name : filter.ID}</option>
+                                        ))}
+                                    </Form.Select>
+                                </InputGroup>}
 
                                 <Button
                                     className='button mb-3 w-100'

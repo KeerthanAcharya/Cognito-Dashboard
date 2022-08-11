@@ -11,8 +11,8 @@ const Topbar = () => {
     const history = useHistory();
 
     const logoutHandler = () => {
-        localStorage.clear();
-        history.push('/login');
+        // localStorage.clear();
+        // history.push('/login');
     };
     let word: string = name
         ?.split(/\s/)
@@ -30,11 +30,14 @@ const Topbar = () => {
         },
     ];
 
+    console.log('Name', name);
+    console.log('Role', role)
+
     return (
         <div className='topbar-height shadow-sm d-flex align-items-center'>
             <div className='top-bar-container'>
                 <div>
-                    {/* <p style={{ marginBottom: '0rem', fontSize: '1.125rem' }}>Cognitgo</p> */}
+                   
                     <img src={logo} alt='cognitgo logo' width='150' />
                 </div>
                 <div>

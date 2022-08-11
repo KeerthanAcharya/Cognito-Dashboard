@@ -1,0 +1,19 @@
+.loading-bar-main {
+    position: absolute;
+    height: 100%;
+    width: 33%;
+    z-index: 9;
+    background-color: rgba(254, 254, 254, 0.701) !important;
+}
+.spinner-border {
+    animation-duration: 1s;
+}
+
+@media(max-width:990px) {
+    .loading-bar-main {
+        position: absolute !important;
+        height: 100% !important;
+        width: 100% !important;
+        /* background-color: blue !important; */
+    }
+}

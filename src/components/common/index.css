@@ -247,11 +247,19 @@
 }
 
 /* Loader */
+.loader-main{
+    /* position: absolute; */
+    /* width: 50%; */
+    /* height: auto; */
+    /* z-index: 1; */
+    background-color: rgba(0, 0, 0, 0.085) !important;
+}
 
 .loader {
     -webkit-animation: spin 2s linear infinite;
     /* Safari */
     animation: spin 1s linear infinite;
+    /* z-index: 1; */
 }
 
 /* Safari */

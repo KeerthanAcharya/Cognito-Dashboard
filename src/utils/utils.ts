@@ -24,12 +24,12 @@ export const Types = [
 export const Roles = [
     {
         type: 'corporate',
-        label: 'corporate_Role 1',
-        value: 'corporate_role_1'
+        label: 'Corporate Admin',
+        value: 'corporate_admin'
     },
     {
         type: 'dealer',
-        label: 'dealer_Role_2',
-        value: 'dealer_Role_2'
+        label: 'Dealer Admin',
+        value: 'dealer_admin'
     },
 ]

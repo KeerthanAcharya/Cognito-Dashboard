@@ -11,7 +11,7 @@ const sidebarItems = [
         image: chartBar,
         alt: 'Dashboard',
         width: '20px',
-        users: ['admin', 'manager_internal', 'rep_internal', 'dealer_admin', 'dealer_rep', "corporate_role_1"],
+        users: ['admin', 'manager_internal', 'rep_internal', 'dealer_admin', 'dealer_rep', "corporate_role_1", "corporate_admin", "dealer_admin"],
     },
     // {
     //     label: 'Leads and Opportunities',

@@ -23,7 +23,9 @@ const RightPanel = ({ setUser }: { setUser: Function }) => {
 
         setIsLoading(true);
 
-        const url = config['baseHost_backend'] + '/login';
+        // const url = config['baseHost_backend'] + '/login';
+        const url = config['baseHost_backend'] + '/drm-sign-in';
+        
         const requestOptions = {
             email: username,
             password: password,
@@ -37,6 +39,8 @@ const RightPanel = ({ setUser }: { setUser: Function }) => {
 
                 setIsLoading(false);
                 if (response.data.statusCode === 200) {
+                    console.log('Login responce', response)
+                    localStorage.setItem('$AuthToken11', response.data.body.access_token);
                     localStorage.setItem('$AuthToken', response.data.body.access_token);
                     setUser({
                         id: response.data.body.user_info.id,

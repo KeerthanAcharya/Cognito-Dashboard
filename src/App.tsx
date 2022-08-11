@@ -44,15 +44,15 @@ function ProtectedRoute({ isAuthenticated, ...routeProps }: ProtectedRouteProps)
 const queryClient = new QueryClient();
 
 function App() {
-    const [soldData, setSoldData] = useState<any>("")
+    const[soldData,setSoldData]=useState<any>("")
     const [user, setUser] = useState({
         id: '',
         email: '',
         name: '',
         role: '',
-        soldvalue: '0',
-        fromDate: '',
-        toDate: '',
+        soldvalue:'0',
+        fromDate:'',
+        toDate:'',
         type: '',
         ID: '',
         authToken: '',
@@ -68,6 +68,7 @@ function App() {
         const token = localStorage.getItem('$AuthToken');
         console.log("🚀 ~ file: App.tsx ~ line 67 ~ useEffect ~ token", token)
         if (token) {
+            console.log('called selfUser', token)
             selfUser(token)
                 .then((data) => {
                     if (!data) {
@@ -78,11 +79,11 @@ function App() {
                             email: data.data.email,
                             name: data.data.first_name + ' ' + data.data.last_name,
                             role: data.data.role,
-                            soldvalue: '0',
-                            fromDate: '',
+                            soldvalue:'0',
+                            fromDate:'',
                             type: data.data.type,
                             ID: data.data.ID,
-                            toDate: '',
+                            toDate:'',
                             authToken: token,
                         });
 
@@ -101,7 +102,7 @@ function App() {
                 .catch((error) => {
                     setLoading(false);
                     console.log(error);
-                    localStorage.removeItem('$AuthToken');
+                    // localStorage.removeItem('$AuthToken');
                 });
         } else {
             setLoading(false);
@@ -117,7 +118,7 @@ function App() {
     }
     return (
         <QueryClientProvider client={queryClient}>
-            <HashRouter>
+            <HashRouter hashType='noslash'>
                 <UserContext.Provider
                     value={{
                         id: user.id,
@@ -125,9 +126,9 @@ function App() {
                         role: user.role,
                         email: user.email,
                         authToken: user.authToken,
-                        soldvalue: user.soldvalue,
-                        fromDate: user.fromDate,
-                        toDate: user.toDate,
+                        soldvalue:user.soldvalue,
+                        fromDate:user.fromDate,
+                        toDate:user.toDate,
                         type: user.type,
                         ID: user.ID,
                         setUser: setUser,
@@ -143,7 +144,7 @@ function App() {
                             <ProtectedRoute
                                 isAuthenticated={isAuthenticate()}
                                 path='/dashboard'
-                                render={() => <WithBars render={() => <Dashboard setUser={setUser} />} />}
+                                render={() => <WithBars render={() => <Dashboard setUser={setUser}/>} />}
                                 exact
                             />
                             {/* <ProtectedRoute
