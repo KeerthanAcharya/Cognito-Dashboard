@@ -9,7 +9,7 @@ export const selfUser = (token: string) =>
     axios
         .get(`${url}/drm-refersh-token`, {
             headers: {
-                Authorization: token,
+                Authorization: token
             },
         })
         .then((res) => res.data)
@@ -21,6 +21,20 @@ export const selfUser = (token: string) =>
                     : 'Something went wrong'
             )
         );
+
+// export const selfUser = (token: string) =>
+
+//     axios
+//         .post(`${url}/drm-refersh-token`, { reqtoken: token })
+//         .then((res) => res.data)
+//         .catch((error) =>
+//             toastify(
+//                 'failure',
+//                 error.response.data.message.length > 0
+//                     ? error.response.data.message
+//                     : 'Something went wrong'
+//             )
+//         );
 
 export const getOneUserApi = (token: string, id: string) =>
     axios

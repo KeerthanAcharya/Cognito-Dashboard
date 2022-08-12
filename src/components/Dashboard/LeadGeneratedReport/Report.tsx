@@ -19,7 +19,7 @@ chartJS.register(...registerables, Tooltip);
 function Report({ dateFiltred }: any) {
     const [totalLead, setTotalLead] = useState(null)
     const [customerNoResponded, setCustomerResponsed] = useState(null)
-    const { authToken } = useContext(UserContext);
+    const { authToken, type, ID } = useContext(UserContext);
     const [myData, setmyData] = useState<any>(null)
 
     const [rowPerPage, setRowperPage] = useState(10);
@@ -32,7 +32,7 @@ function Report({ dateFiltred }: any) {
     const [scrollMin, setScrollMin] = useState(0)
     const [scrollMax, setScrollMax] = useState(9)
     const [loading, setLoading] = useState<boolean>(false)
-    const { data: dashboardData, isLoading: isLeadsLoading } = useQuery('test-dashboard', () =>
+    const { data: dashboardData, isLoading: isLeadsLoading } = useQuery('drm-dashboard', () =>
         dashboard(authToken)
     );
 
@@ -42,9 +42,15 @@ function Report({ dateFiltred }: any) {
             console.log('date filtred', dateFiltred)
         }
         else {
+            let userInfo = {
+                data: {
+                    type: type,
+                    ID: Number(ID)
+                }
+            }
             setLoading(true)
             axios
-                .get(`${url}/test-dashboard`, {
+                .post(`${url}/drm-dashboard`, userInfo, {
                     headers: {
                         authorization: `Bearer ${authToken}`,
                     },
@@ -106,7 +112,7 @@ function Report({ dateFiltred }: any) {
                     },
                 ],
             })
-            console.log("🚀 ~ file: Report.tsx ~ line 24 ~ Report ~ myD̥ata", myData && myData)
+            console.log("🚀 ~ file: Report.tsx ~ line 24 ~ Report ~ myD̥ata", myData)
         }
     }, [data, displayData, pageNumber, filter, scrollMax, scrollMin])
 
@@ -203,7 +209,7 @@ function Report({ dateFiltred }: any) {
                     pageCount={1}
                     previousLabel="<<"
                     // containerClassName='pagination'
-                    containerClassName={isLeadsLoading || filter !== 'All' ? 'd-none' : 'pagination'}
+                    containerClassName={isLeadsLoading || filter !== 'All'  ? 'd-none' : 'pagination'}
                     pageClassName='page-item disabled'
                     pageLinkClassName='page-link'
                     previousClassName='page-item'
@@ -218,7 +224,7 @@ function Report({ dateFiltred }: any) {
             </Col>
 
             <Col className='spacing-1 d-flex m-auto justify-content-center'>
-                {!myData?.datasets[0]?.data[0] && !loading ? (<div><h3>No Data Found</h3></div>) :
+                {!myData?.datasets[0]?.data[0] && !myData?.datasets[0]?.data[1] && !loading ? (<div><h3>No Data Found</h3></div>) :
                     (<div style={{ width: '350px' }}>
                         {myData && <Pie data={myData} />}
                     </div>)}

@@ -15,7 +15,7 @@ chartJS.register(...registerables);
 function Report({ dateFiltred }: any) {
     const [scrollMin, setScrollMin] = useState(0)
     const [scrollMax, setScrollMax] = useState(9)
-    const { authToken } = useContext(UserContext);
+    const { authToken, type, ID } = useContext(UserContext);
     const [pageNumber, setPageNumber] = useState(0);
     const [rowPerPage, setRowperPage] = useState(10);
     const [myData, setmyData] = useState<any>(null)
@@ -24,10 +24,10 @@ function Report({ dateFiltred }: any) {
     const [displayData, setDisplayData] = useState<any>(null)
     const pageVisited = pageNumber * rowPerPage;
     const [loading, setLoading] = useState<boolean>(false)
-    const { data: dashboardData, isLoading: isLeadsLoading } = useQuery('test-dashboard', () =>
+    const { data: dashboardData, isLoading: isLeadsLoading } = useQuery('drm-dashboard', () =>
         dashboard(authToken)
     );
-
+    const [BarXlength, setBarXlength] = useState<any>(null)
 
     useEffect(() => {
         if (dateFiltred) {
@@ -35,9 +35,15 @@ function Report({ dateFiltred }: any) {
             console.log('date filtred', dateFiltred)
         }
         else {
+            let userInfo = {
+                data: {
+                    type: type,
+                    ID: Number(ID)
+                }
+            }
             setLoading(true)
             axios
-                .get(`${url}/test-dashboard`, {
+                .post(`${url}/drm-dashboard`, userInfo, {
                     headers: {
                         authorization: `Bearer ${authToken}`,
                     },
@@ -64,8 +70,10 @@ function Report({ dateFiltred }: any) {
         if (data && displayData) {
             console.log('display data', displayData)
             console.log('data2', data)
+            const labelValue = filter === 'All' ? data?.vehicleByYear.filter((vehicle: any) => typeof (vehicle._id) === 'string' && vehicle._id.split('').length === 4).sort((a: any, b: any) => (a._id > b._id) ? -1 : 1).map((vehicle: any) => vehicle._id) : displayData?.map((vehicle: any) => vehicle._id)
+            setBarXlength(labelValue.length)
             setmyData({
-                labels: filter === 'All' ? data?.vehicleByYear.filter((vehicle: any) => typeof (vehicle._id) === 'string' && vehicle._id.split('').length === 4).sort((a: any, b: any) => (a._id > b._id) ? -1 : 1).map((vehicle: any) => vehicle._id) : displayData?.map((vehicle: any) => vehicle._id),
+                labels: labelValue,
                 datasets: [
                     {
                         label: 'Percentage',
@@ -173,7 +181,7 @@ function Report({ dateFiltred }: any) {
                 <ReactPaginate
                     nextLabel=">>"
                     onPageChange={handlePageClick}
-                    pageCount={pageCount}
+                    pageCount={data?.vehicleByYear?.length > rowPerPage ? pageCount : 1}
                     previousLabel="<<"
                     containerClassName='pagination'
                     pageClassName={filter === 'All' ? 'pagination' : 'page-item disabled'}
@@ -233,7 +241,7 @@ function Report({ dateFiltred }: any) {
                                 setScrollMin(scrollMin - 10)
                                 setScrollMax(scrollMax - 10)
                             }}>Prev</button>
-                            <button className='btn btn-light shadow-lg' disabled={dashboardData?.body?.data?.carModel.length === scrollMax || filter !== 'All'} onClick={() => {
+                            <button className='btn btn-light shadow-lg' disabled={BarXlength < scrollMax || filter !== 'All'} onClick={() => {
                                 setScrollMin(scrollMin + 10)
                                 setScrollMax(scrollMax + 10)
                             }}>Next</button>

@@ -32,7 +32,7 @@ const Signup = () => {
         e.preventDefault();
 
    
-        if (!firstName || !lastName || !email || !password || !role || !type) return;
+        // if (!firstName || !lastName || !email || !password || !role || !type) return;
 
         setIsLoading(true);
 

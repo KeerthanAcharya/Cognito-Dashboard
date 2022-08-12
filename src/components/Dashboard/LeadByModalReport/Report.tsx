@@ -20,10 +20,12 @@ function Report({ dateFiltred }: any) {
     const [scrollMin, setScrollMin] = useState(0)
     const [scrollMax, setScrollMax] = useState(9)
 
-    const { authToken } = useContext(UserContext);
+    const [BarXlength,setBarXlength]=useState<any>(null)
+
+    const { authToken,type,ID } = useContext(UserContext);
     const [myData, setmyData] = useState<any>(null)
     const [filter, setFilter] = useState<any>('All')
-    const { data: dashboardData, isLoading: isLeadsLoading } = useQuery('test-dashboard', () =>
+    const { data: dashboardData, isLoading: isLeadsLoading } = useQuery('drm-dashboard', () =>
         dashboard(authToken)
     );
     const [pageNumber, setPageNumber] = useState(0);
@@ -38,9 +40,15 @@ function Report({ dateFiltred }: any) {
             console.log('date filtred', dateFiltred)
         }
         else {
+            let userInfo = {
+                data: {
+                    type: type,
+                    ID: Number(ID)
+                }
+            }
             setLoading(true)
             axios
-                .get(`${url}/test-dashboard`, {
+                .post(`${url}/drm-dashboard`,userInfo, {
                     headers: {
                         authorization: `Bearer ${authToken}`,
                     },
@@ -66,9 +74,11 @@ function Report({ dateFiltred }: any) {
 
     useEffect(() => {
         if (data && displayData) {
+            const labelValue=filter === 'All' ? data?.carModel.sort((a: any, b: any) =>
+            (a.percent > b.percent) ? -1 : 1).filter((model: any) => typeof (model._id) === 'string' && model._id.split('').length > 1).map((car: any) => car._id) : displayData?.map((car: any) => car._id)
+            setBarXlength(labelValue.length)
             setmyData({
-                labels: filter === 'All' ? data?.carModel.sort((a: any, b: any) =>
-                    (a.percent > b.percent) ? -1 : 1).filter((model: any) => typeof (model._id) === 'string' && model._id.split('').length > 1).map((car: any) => car._id) : displayData?.map((car: any) => car._id),
+                labels: labelValue,
                 datasets: [
                     {
                         label: 'Percentage of Lead Generation',
@@ -243,10 +253,10 @@ function Report({ dateFiltred }: any) {
                 <ReactPaginate
                     nextLabel=">>"
                     onPageChange={handlePageClick}
-                    pageCount={pageCount}
+                    pageCount={data?.carModel?.length>rowPerPage  ? pageCount : 1}
                     previousLabel="<<"
                     containerClassName='pagination'
-                    pageClassName={filter === 'All' ? 'pagination' : 'page-item disabled'}
+                    pageClassName={filter === 'All'  ? 'pagination' : 'page-item disabled'}
                     // pageClassName='page-item'
                     pageLinkClassName='page-link'
                     previousClassName='page-item'
@@ -299,7 +309,7 @@ function Report({ dateFiltred }: any) {
                                 setScrollMin(scrollMin - 10)
                                 setScrollMax(scrollMax - 10)
                             }}>Prev</button>
-                            <button className='btn btn-light shadow-lg' disabled={dashboardData?.body?.data?.carModel.length === scrollMax || filter !== 'All'} onClick={() => {
+                            <button className='btn btn-light shadow-lg' disabled={(BarXlength < scrollMax) || filter !== 'All'} onClick={() => {
                                 setScrollMin(scrollMin + 10)
                                 setScrollMax(scrollMax + 10)
                             }}>Next</button>

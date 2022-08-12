@@ -61,6 +61,7 @@ const RightPanel = ({ setUser }: { setUser: Function }) => {
                     toastify('success', 'Login Success');
                     history.push('/dashboard');
                 } else {
+                    setIsSuccess(false);
                     toastify('failure', 'Invalid Username and Password');
                     history.push('/');
                 }
@@ -199,9 +200,9 @@ const RightPanel = ({ setUser }: { setUser: Function }) => {
                             </div>
 
                         </>) : <Signup />}
-                {action === "Login" ?
+                {/* {action === "Login" ?
                  <span className='action-label'>Need an account? <span className='action-label-link' onClick={() => { setAction('Signup') }}>SignUp</span></span>
-                 : <span className='action-label signupAsk'>Already a user? <span className='action-label-link' onClick={() => { setAction('Login') }}>Login</span></span>}
+                 : <span className='action-label signupAsk'>Already a user? <span className='action-label-link' onClick={() => { setAction('Login') }}>Login</span></span>} */}
             </Container>
 
         </div>

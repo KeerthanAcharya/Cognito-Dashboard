@@ -14,3 +14,13 @@
 .filter-btn{
     margin-right: 15px;
 }
+
+.filter-header{
+    position: fixed;
+    width: 100%;
+    z-index: 11;
+    background-color: rgb(247, 241, 252) !important;
+}
+.mt-10{
+    padding-top: 100px;
+}

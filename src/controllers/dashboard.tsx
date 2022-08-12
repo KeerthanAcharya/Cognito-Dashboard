@@ -4,7 +4,7 @@ import { toastify } from "../components/common/notification";
 const url = config['baseHost_backend'];
 export const dashboard = (token: string) => 
     axios
-        .get(`${url}/test-dashboard`, {
+        .post(`${url}/drm-dashboard`, {
             headers: {
                 authorization: `Bearer ${token}`,
             },

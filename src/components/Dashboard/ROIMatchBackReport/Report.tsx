@@ -16,7 +16,7 @@ const url = config['baseHost_backend'];
 function Report({ setUser }: { setUser: Function }) {
     const [filter, setFilter] = useState<any>('All')
     const [data, setData] = useState<any>(null)
-    const { authToken, fromDate, toDate } = useContext(UserContext);
+    const { authToken, fromDate, toDate, type, ID } = useContext(UserContext);
     let fileUpload = useRef<any>(null)
     const [front, setFront] = useState(0)
     const [back, setBack] = useState(0)
@@ -47,8 +47,16 @@ function Report({ setUser }: { setUser: Function }) {
                 //axios call
                 let bodyData = rowObject;
 
+                let userInfo = {
+                    data: {
+                        type: type,
+                        ID: Number(ID),
+                        bodyData: bodyData
+                    }
+                }
+
                 axios
-                    .post(`${url}/test-dashboard`, bodyData, {
+                    .post(`${url}/drm-dashboard`, userInfo, {
                         headers: {
                             authorization: `Bearer ${authToken}`,
                         },
@@ -99,6 +107,7 @@ function Report({ setUser }: { setUser: Function }) {
                         })
                     })
                 setDisplayData(tempArray);
+                console.log('excel', tempArray)
 
             }
             else {
@@ -151,7 +160,7 @@ function Report({ setUser }: { setUser: Function }) {
                             </div>
                             <div className='d-flex flex-column align-items-end'>
                                 <input type="file" onChange={handleFileChange} hidden ref={fileUpload} name="excel" id="excel" accept='.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel' />
-                                
+
                                 <Button className={fromDate && toDate ? 'btn btn-success btn-sm w-25' : 'btn btn-success btn-sm w-100'} onClick={handleBtn}>Choose File</Button>
                                 {fromDate && toDate && <span className='message-for-upload text-danger'>*Please select the file with date between {getFromDate()} & {getToDate()}</span>}
                             </div>
@@ -189,41 +198,46 @@ function Report({ setUser }: { setUser: Function }) {
                                 </thead>
                                 <tbody>
                                     {
-                                        displayData?.map((data: any, index: any) => (
-                                            <>
-                                                <tr>
-                                                    <td>{data.name}</td>
-                                                    <td>{data.vehicle}</td>
-                                                    <td>{data.dateSold}</td>
-                                                    <td>{data.mesgDate}</td>
-                                                    <td>{data.front}</td>
-                                                    <td>{data.back}</td>
-                                                    <td>{data.total}</td>
-                                                    <td>{data.salePrice}</td>
-                                                </tr>
-                                            </>
-                                        ))
+                                        !displayData || displayData?.length < 1 ?
+                                            <div><h3 className='py-3'>No Data Found</h3></div>
+                                            :
+                                            displayData?.map((data: any, index: any) => (
+                                                <>
+                                                    <tr>
+                                                        <td>{data.name}</td>
+                                                        <td>{data.vehicle}</td>
+                                                        <td>{data.dateSold}</td>
+                                                        <td>{data.mesgDate}</td>
+                                                        <td>{data.front}</td>
+                                                        <td>{data.back}</td>
+                                                        <td>{data.total}</td>
+                                                        <td>{data.salePrice}</td>
+                                                    </tr>
+                                                </>
+                                            ))
                                     }
                                 </tbody>
                             </table>
-                            <ReactPaginate
-                                nextLabel=">>"
-                                onPageChange={handlePageClick}
-                                pageCount={pageCount}
-                                previousLabel="<<"
-                                containerClassName='pagination'
-                                pageClassName={filter === 'All' ? 'pagination' : 'page-item disabled'}
-                                // pageClassName='page-item'
-                                pageLinkClassName='page-link'
-                                previousClassName='page-item'
-                                previousLinkClassName='page-link'
-                                nextClassName='page-item'
-                                nextLinkClassName='page-link'
-                                breakLabel='...'
-                                breakLinkClassName='page-link'
-                                activeClassName='active'
-                                breakClassName='page-item'
-                            />
+                            {!displayData || displayData?.length < 1 && 
+                                <ReactPaginate
+                                    nextLabel=">>"
+                                    onPageChange={handlePageClick}
+                                    pageCount={pageCount}
+                                    previousLabel="<<"
+                                    containerClassName='pagination'
+                                    pageClassName={filter === 'All' ? 'pagination' : 'page-item disabled'}
+                                    // pageClassName='page-item'
+                                    pageLinkClassName='page-link'
+                                    previousClassName='page-item'
+                                    previousLinkClassName='page-link'
+                                    nextClassName='page-item'
+                                    nextLinkClassName='page-link'
+                                    breakLabel='...'
+                                    breakLinkClassName='page-link'
+                                    activeClassName='active'
+                                    breakClassName='page-item'
+                                />
+                            }
                         </>}
                     </Col>)}
             </Row>

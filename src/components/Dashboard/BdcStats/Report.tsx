@@ -16,9 +16,9 @@ import { any } from 'ramda';
 const url = config['baseHost_backend'];
 chartJS.register(...registerables);
 function Report({ dateFiltred }: any) {
-    const { authToken, soldvalue } = useContext(UserContext);
+    const { authToken, soldvalue,type,ID } = useContext(UserContext);
     const [myData, setmyData] = useState<any>(null)
-    const { data: datas } = useQuery('test-dashboard', () =>
+    const { data: datas } = useQuery('drm-dashboard', () =>
         dashboard(authToken)
     );
     const [filter, setFilter] = useState<any>('All')
@@ -115,8 +115,14 @@ function Report({ dateFiltred }: any) {
         }
         else {
             setLoading(true)
+            let userInfo = {
+                data: {
+                    type: type,
+                    ID: Number(ID)
+                }
+            }
             axios
-                .get(`${url}/test-dashboard`, {
+                .post(`${url}/drm-dashboard`,userInfo, {
                     headers: {
                         authorization: `Bearer ${authToken}`,
                     },

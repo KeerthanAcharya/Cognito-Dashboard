@@ -37,6 +37,7 @@ function ProtectedRoute({ isAuthenticated, ...routeProps }: ProtectedRouteProps)
         return <Route {...routeProps} />;
     } else {
         return <Redirect to={{ pathname: '/auth' }} />;
+        
     }
 }
 
@@ -74,6 +75,7 @@ function App() {
                     if (!data) {
                         localStorage.removeItem('$AuthToken');
                     } else {
+                        console.log('Refresh token responce', data)
                         setUser({
                             id: data.data.id,
                             email: data.data.email,
@@ -88,7 +90,7 @@ function App() {
                         });
 
                         const firstElement = sidebarItems.find((item) =>
-                            item.users?.includes(data.role)
+                            item.users?.includes(data.data.role)
                         );
 
                         const sideItems = sidebarItems.filter((item) =>
@@ -102,7 +104,7 @@ function App() {
                 .catch((error) => {
                     setLoading(false);
                     console.log(error);
-                    // localStorage.removeItem('$AuthToken');
+                    localStorage.removeItem('$AuthToken');
                 });
         } else {
             setLoading(false);

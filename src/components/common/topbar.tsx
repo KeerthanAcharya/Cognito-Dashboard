@@ -7,7 +7,7 @@ import logo from '../../assets/images/Cognitgo_Logo-Dark.png';
 import { useHistory } from 'react-router';
 
 const Topbar = () => {
-    const { name, role } = useContext(UserContext);
+    const { name, role,ID,type } = useContext(UserContext);
     const history = useHistory();
 
     const logoutHandler = () => {
@@ -36,12 +36,17 @@ const Topbar = () => {
     return (
         <div className='topbar-height shadow-sm d-flex align-items-center'>
             <div className='top-bar-container'>
-                <div>
+                <div className='mt-auto mb-auto'>
                    
                     <img src={logo} alt='cognitgo logo' width='150' />
                 </div>
-                <div>
+                {/* <div>
                     {name?.charAt(0).toUpperCase() + name?.substring(1).split(' ')[0]} {'  '}
+                </div> */}
+                <div className='d-flex flex-column'>
+                    <span>{name?.charAt(0).toUpperCase() + name?.substring(1).split(' ')[0]} {'  '}</span>
+                    <span className='label-header'>{type}</span>
+                    <span className='label-header'>{ID}</span>
                 </div>
             </div>
             <DropdownSelect

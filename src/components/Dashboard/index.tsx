@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react';
-import { Button, Col, Form, Row, Spinner } from 'react-bootstrap';
+import React, { useContext, useEffect, useState } from 'react';
+import { Button, Col, Form, InputGroup, Row, Spinner } from 'react-bootstrap';
 // import * as $ from 'jquery'
 
 import './dashboard.css';
@@ -18,12 +18,13 @@ import config from '../../config.json';
 // import YearPicker from "react-year-picker";
 
 const Dashboard = ({ setUser }: { setUser: Function }) => {
-    const { authToken } = useContext(UserContext);
+    const { authToken, type,ID } = useContext(UserContext);
     const [fromDate, setFromDate] = useState<any>("")
     const [loading, setLoading] = useState(false)
     const [toDate, setToDate] = useState<any>("")
     const [data, setData] = useState<any>(null)
     const url = config['baseHost_backend'];
+    const [filteredUsers, setFilteredusers] = useState<any>(null)
     const handleFromYearChange = (e: any) => {
         console.log('date 1', e.target.value)
         setFromDate(e.target.value)
@@ -53,19 +54,27 @@ const Dashboard = ({ setUser }: { setUser: Function }) => {
         let bodyData = {
             dateRange: {
                 dateFrom: iso1,
-                dateto: iso2
+                dateto: iso2,
+                type: type,
+                ID: Number(ID)
             }
         }
-        console.log('body', bodyData)
+ 
         setLoading(true)
+        // let userInfo = {
+        //     data: {
+        //         type: type,
+        //         ID: Number(ID)
+        //     }
+        // }
         axios
-            .post(`${url}/test-dashboard`, bodyData, {
+            .post(`${url}/drm-dashboard`, bodyData, {
                 headers: {
                     authorization: `Bearer ${authToken}`,
                 },
             })
             .then((res) => {
-                setData(res.data.body.data)
+                setData(res?.data?.body?.data)
                 // setData(res.data.body.updateArray);
                 // setFront(res.data.body.sum.totalFront)
                 // setBack(res.data.body.sum.totalBack)
@@ -79,7 +88,7 @@ const Dashboard = ({ setUser }: { setUser: Function }) => {
                 setLoading(false)
                 toastify(
                     'failure',
-                    error.response.data.message.length > 0
+                    error.response?.data?.message?.length > 0
                         ? error.response.data.message
                         : 'Something went wrong'
                 )
@@ -88,9 +97,36 @@ const Dashboard = ({ setUser }: { setUser: Function }) => {
 
     }
 
+    useEffect(() => {
+        if (type === 'corporate') {
+            setLoading(true)
+            const url = config['baseHost_backend'] + '/drm-create-user';
+            let body = {
+                selectType: {
+                    type: 'corporate'
+                }
+            }
+            axios.post(url, body).then((resp) => {
+                console.log('Type responce', resp)
+                setFilteredusers(resp?.data?.body)
+                setLoading(false)
+            }).catch((err) => {
+                console.log('Error', err)
+                setLoading(false)
+            })
+        }
+
+    }, [type])
+
+    // const fetchUsersByType = async (val: any) => {
+
+    // }
+
+    // type === 'corporate' && fetchUsersByType(type)
+
     return (
         <div className='containerBox'>
-            <div className='d-flex flex-row justify-content-left shadow-sm bg-light p-3'>
+            <div className='d-flex flex-row justify-content-left shadow-sm bg-light p-3 filter-header'>
                 <div className=' pl-3'>
                     <span>From Date</span>
                     <Form.Control type="datetime-local" className='form-control w-25 date-selecter ' onChange={handleFromYearChange} />
@@ -100,17 +136,49 @@ const Dashboard = ({ setUser }: { setUser: Function }) => {
                     <Form.Control type="datetime-local" className='form-control w-25 date-selecter ' onChange={handleTOYearChange} />
                 </div>
                 <div className=' mt-auto'>
-                    <Button className='filter-btn' onClick={fetchData} disabled={!fromDate || !toDate}>
+                    <Button className='filter-btn btn-sm' onClick={fetchData} disabled={!fromDate || !toDate}>
                         {loading ? <Spinner animation='border' variant='primary' /> : 'Filter'}
                     </Button>
-                    <Button onClick={() => { setData(null) }} disabled={!data} className='btn btn-light'>
+                    <Button onClick={() => { setData(null) }} disabled={!data} className='btn btn-light btn-sm'>
                         Reset
                     </Button>
                 </div>
+                {type === 'corporate' && (
+                    <div className=' mt-auto w-25'>
+                        <InputGroup className='input '>
+                            <Form.Select
+                                className='p-2'
+                                size='sm'
+                                aria-describedby='basic-addon1'
+                            // onChange={handleTypeChange}
+                            >
+                                <option value="null">Select dealer</option>
+                                {filteredUsers?.map((filter: any) => (
+                                    <option value={filter.ID}>{filter.first_name + ' ' + filter.last_name}</option>
+                                ))}
+                            </Form.Select>
+                        </InputGroup>
+                    </div>
+                )}
+                {type === 'corporate' && (
+                    <div className=' mt-auto w-25'>
+                        <InputGroup className='input '>
+                            <Form.Select
+                                className='p-2'
+                                size='sm'
+                                aria-describedby='basic-addon1'
+                            // onChange={handleTypeChange}
+                            >
+                                <option value="null">Select Location</option>
+                                
+                            </Form.Select>
+                        </InputGroup>
+                    </div>
+                )}
             </div>
 
 
-            <Row className='spacing-'>
+            <Row className='spacing-1 mt-10'>
                 <Col>
                     {/* <h2 className='font-weight-bold p-3'>Lead Generated Report</h2> */}
                     <LeadGeneratedReport dateFiltred={data && data} />

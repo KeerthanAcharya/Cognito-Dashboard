@@ -245,6 +245,10 @@
 .lg-user-mail {
     margin-top: 10px;
 }
+.label-header{
+    font-size: 12px;
+    color: gray;
+}
 
 /* Loader */
 .loader-main{
