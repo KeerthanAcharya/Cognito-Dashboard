@@ -50,7 +50,7 @@ const Topbar = () => {
                 </div>
             </div>
             <DropdownSelect
-                data={name.split(' ')[0][0]}
+                data={name.split(' ')[0][0].toUpperCase()}
                 role={array}
                 className='rounded-circle p-2'
             />

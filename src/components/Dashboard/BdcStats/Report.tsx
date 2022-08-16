@@ -16,7 +16,7 @@ import { any } from 'ramda';
 const url = config['baseHost_backend'];
 chartJS.register(...registerables);
 function Report({ dateFiltred }: any) {
-    const { authToken, soldvalue,type,ID } = useContext(UserContext);
+    const { authToken, soldvalue, type, ID } = useContext(UserContext);
     const [myData, setmyData] = useState<any>(null)
     const { data: datas } = useQuery('drm-dashboard', () =>
         dashboard(authToken)
@@ -93,8 +93,8 @@ function Report({ dateFiltred }: any) {
         if (dateFiltred) {
             setLoading(true)
             setData(dateFiltred)
-            appointmentCount = dateFiltred?.status.filter((status: any) => status._id === 'appointment')
-            bot_working = dateFiltred?.status.filter((status: any) => status._id === 'bot_working')
+            appointmentCount = dateFiltred?.status?.filter((status: any) => status._id === 'appointment')
+            bot_working = dateFiltred?.status?.filter((status: any) => status._id === 'bot_working')
 
             newdata = status?.map((status: any) => (
                 status.text === 'no_responce' ?
@@ -117,20 +117,21 @@ function Report({ dateFiltred }: any) {
             setLoading(true)
             let userInfo = {
                 data: {
+                    actionType: 'dashboardFetch',
                     type: type,
-                    ID: Number(ID)
+                    ID: type === 'corporate' ? ID : Number(ID)
                 }
             }
             axios
-                .post(`${url}/drm-dashboard`,userInfo, {
+                .post(`${url}/drm-dashboard`, userInfo, {
                     headers: {
                         authorization: `Bearer ${authToken}`,
                     },
                 })
                 .then((res) => {
                     setData(res.data.body.data);
-                    appointmentCount = res.data.body.data.status.filter((status: any) => status._id === 'appointment')
-                    bot_working = res.data.body.data.status.filter((status: any) => status._id === 'bot_working')
+                    appointmentCount = res.data?.body?.data?.status.filter((status: any) => status._id === 'appointment')
+                    bot_working = res.data?.body?.data?.status?.filter((status: any) => status._id === 'bot_working')
 
                     newdata = status?.map((status: any) => (
                         status.text === 'no_responce' ?
@@ -274,7 +275,8 @@ function Report({ dateFiltred }: any) {
                 />
             </Col>
             <Col className={!myData?.datasets[0]?.data[0] ? "spacing-1 d-flex mt-5 justify-content-center" : "spacing-1"}>
-                {!myData?.datasets[0]?.data[0] ? <div><h3>No Data Found</h3></div> :
+                {!myData?.datasets[0]?.data[0]
+                    ? <div><h3>No Data Found</h3></div> :
                     (<>
                         <div style={{ height: '700px' }}>
                             {myData && <Bar

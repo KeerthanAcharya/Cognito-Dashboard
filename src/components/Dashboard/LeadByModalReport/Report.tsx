@@ -20,9 +20,9 @@ function Report({ dateFiltred }: any) {
     const [scrollMin, setScrollMin] = useState(0)
     const [scrollMax, setScrollMax] = useState(9)
 
-    const [BarXlength,setBarXlength]=useState<any>(null)
+    const [BarXlength, setBarXlength] = useState<any>(null)
 
-    const { authToken,type,ID } = useContext(UserContext);
+    const { authToken, type, ID } = useContext(UserContext);
     const [myData, setmyData] = useState<any>(null)
     const [filter, setFilter] = useState<any>('All')
     const { data: dashboardData, isLoading: isLeadsLoading } = useQuery('drm-dashboard', () =>
@@ -34,6 +34,7 @@ function Report({ dateFiltred }: any) {
     const [displayData, setDisplayData] = useState<any>(null)
     const pageVisited = pageNumber * rowPerPage;
     const [loading, setLoading] = useState<boolean>(false)
+    const [dealers, setDealers] = useState<any>(null)
     useEffect(() => {
         if (dateFiltred) {
             setData(dateFiltred)
@@ -42,13 +43,14 @@ function Report({ dateFiltred }: any) {
         else {
             let userInfo = {
                 data: {
+                    actionType: 'dashboardFetch',
                     type: type,
-                    ID: Number(ID)
+                    ID: type==='corporate' ? ID : Number(ID)
                 }
             }
             setLoading(true)
             axios
-                .post(`${url}/drm-dashboard`,userInfo, {
+                .post(`${url}/drm-dashboard`, userInfo, {
                     headers: {
                         authorization: `Bearer ${authToken}`,
                     },
@@ -74,8 +76,8 @@ function Report({ dateFiltred }: any) {
 
     useEffect(() => {
         if (data && displayData) {
-            const labelValue=filter === 'All' ? data?.carModel.sort((a: any, b: any) =>
-            (a.percent > b.percent) ? -1 : 1).filter((model: any) => typeof (model._id) === 'string' && model._id.split('').length > 1).map((car: any) => car._id) : displayData?.map((car: any) => car._id)
+            const labelValue = filter === 'All' ? data?.carModel.sort((a: any, b: any) =>
+                (a.percent > b.percent) ? -1 : 1).filter((model: any) => typeof (model._id) === 'string' && model._id.split('').length > 1).map((car: any) => car._id) : displayData?.map((car: any) => car._id)
             setBarXlength(labelValue.length)
             setmyData({
                 labels: labelValue,
@@ -112,6 +114,7 @@ function Report({ dateFiltred }: any) {
                         })
                     })
                 setDisplayData(tempArray);
+                console.log('tempArray', tempArray.length)
 
             }
             else {
@@ -136,16 +139,18 @@ function Report({ dateFiltred }: any) {
 
 
 
+
+
     // let pageCount =
-    //  filter === 'All'
-    //  ? Math.ceil(dashboardData && dashboardData?.body?.data?.carModel?.length / rowPerPage) 
-    //  : Math.ceil(displayData?.length / rowPerPage)
+    //     dateFiltred ? Math.ceil(data?.carModel?.length / rowPerPage) :
+    //         !dateFiltred && filter === 'All' ? Math.ceil(dashboardData && dashboardData?.body?.data?.carModel?.length / rowPerPage) :
+    //             Math.ceil(displayData?.length / rowPerPage)
 
-    let pageCount =
-        dateFiltred ? Math.ceil(data?.carModel?.length / rowPerPage) :
-            !dateFiltred && filter === 'All' ? Math.ceil(dashboardData && dashboardData?.body?.data?.carModel?.length / rowPerPage) :
-                Math.ceil(displayData?.length / rowPerPage)
 
+    let pageCount = filter === 'All' ?
+        data?.carModel
+            .filter((model: any) => typeof (model._id) === 'string' && model._id.split('').length > 1).length / rowPerPage
+        : Math.ceil(displayData?.length / rowPerPage)
 
 
 
@@ -228,7 +233,7 @@ function Report({ dateFiltred }: any) {
         <Row style={{ width: '500px' }} className="container row w-100 container row w-100 d-flex justify-content-center m-auto">
             <h2 className='font-weight-bold py-2'>Lead By Model Report</h2>
             <Col className='spacing-1'   >
-            
+
                 <table className="table">
                     <thead className="thead-dark bg-dark text-white">
                         <tr>
@@ -238,7 +243,8 @@ function Report({ dateFiltred }: any) {
                         </tr>
                     </thead>
                     <tbody>
-                        {displayData?.length > 0 ?
+                        {console.log('displayData?.length', displayData?.length)}
+                        {displayData?.length >= 0 ?
                             displayData?.map((car: any, index: any) => (
                                 <tr>
                                     <td>{car._id}</td>
@@ -253,10 +259,10 @@ function Report({ dateFiltred }: any) {
                 <ReactPaginate
                     nextLabel=">>"
                     onPageChange={handlePageClick}
-                    pageCount={data?.carModel?.length>rowPerPage  ? pageCount : 1}
+                    pageCount={data?.carModel?.length >= rowPerPage ? pageCount : 1}
                     previousLabel="<<"
                     containerClassName='pagination'
-                    pageClassName={filter === 'All'  ? 'pagination' : 'page-item disabled'}
+                    pageClassName={filter === 'All' ? 'pagination' : 'page-item disabled'}
                     // pageClassName='page-item'
                     pageLinkClassName='page-link'
                     previousClassName='page-item'

@@ -17,7 +17,7 @@
 
 .filter-header{
     position: fixed;
-    width: 100%;
+    min-width: 95%;
     z-index: 11;
     background-color: rgb(247, 241, 252) !important;
 }

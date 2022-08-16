@@ -44,8 +44,9 @@ function Report({ dateFiltred }: any) {
         else {
             let userInfo = {
                 data: {
+                    actionType:'dashboardFetch',
                     type: type,
-                    ID: Number(ID)
+                    ID: type==='corporate' ? ID : Number(ID)
                 }
             }
             setLoading(true)
@@ -56,7 +57,7 @@ function Report({ dateFiltred }: any) {
                     },
                 })
                 .then((res) => {
-                    console.log('res', res)
+                    console.log('res11111', res)
                     setData(res.data.body.data)
                     setLoading(false)
                     // setTotalLead(res?.data?.body?.data?.totalLead)

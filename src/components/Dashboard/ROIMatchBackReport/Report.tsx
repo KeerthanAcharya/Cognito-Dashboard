@@ -49,8 +49,9 @@ function Report({ setUser }: { setUser: Function }) {
 
                 let userInfo = {
                     data: {
+                        actionType:'dashboardFetch',
                         type: type,
-                        ID: Number(ID),
+                        ID: type==='corporate' ? ID : Number(ID),
                         bodyData: bodyData
                     }
                 }

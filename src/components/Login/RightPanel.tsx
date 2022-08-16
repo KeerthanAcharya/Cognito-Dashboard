@@ -63,7 +63,7 @@ const RightPanel = ({ setUser }: { setUser: Function }) => {
                 } else {
                     setIsSuccess(false);
                     toastify('failure', 'Invalid Username and Password');
-                    history.push('/');
+                    // history.push('/');
                 }
             })
             .catch((err) => {

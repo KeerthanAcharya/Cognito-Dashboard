@@ -18,12 +18,13 @@ import config from '../../config.json';
 // import YearPicker from "react-year-picker";
 
 const Dashboard = ({ setUser }: { setUser: Function }) => {
-    const { authToken, type,ID } = useContext(UserContext);
+    const { authToken, type, ID } = useContext(UserContext);
     const [fromDate, setFromDate] = useState<any>("")
     const [loading, setLoading] = useState(false)
     const [toDate, setToDate] = useState<any>("")
     const [data, setData] = useState<any>(null)
     const url = config['baseHost_backend'];
+    const [selectedDealerID, setSelectedDealerID] = useState<any>("")
     const [filteredUsers, setFilteredusers] = useState<any>(null)
     const handleFromYearChange = (e: any) => {
         console.log('date 1', e.target.value)
@@ -37,63 +38,91 @@ const Dashboard = ({ setUser }: { setUser: Function }) => {
     }
 
 
-    const fetchData = () => {
-        let dateStr
-        dateStr = new Date(fromDate);
-        const iso1 = dateStr.toISOString();
+    const fetchData = (type1: any) => {
+        if (type1.functionType === 'dateFilter') {
+            let dateStr
+            dateStr = new Date(fromDate);
+            const iso1 = dateStr.toISOString();
 
-        // let dateStr1 = toDate as any
-        let dateStr1
-        dateStr1 = new Date(toDate);
-        const iso2 = dateStr1.toISOString();
+            let dateStr1
+            dateStr1 = new Date(toDate);
+            const iso2 = dateStr1.toISOString();
 
-        console.log('ISO', iso1, iso2)
-
-        console.log('dsdsjkdhkjsd', fromDate, toDate)
-
-        let bodyData = {
-            dateRange: {
-                dateFrom: iso1,
-                dateto: iso2,
-                type: type,
-                ID: Number(ID)
+            let bodyData = {
+                dateRange: {
+                    dateFrom: iso1,
+                    dateto: iso2,
+                    type: type1,
+                    ID: type==='corporate' ? ID : Number(ID)
+                }
             }
+
+            setLoading(true)
+            axios
+                .post(`${url}/drm-dashboard`, bodyData, {
+                    headers: {
+                        authorization: `Bearer ${authToken}`,
+                    },
+                })
+                .then((res) => {
+                    setData(res?.data?.body?.data)
+                    // setData(res.data.body.updateArray);
+                    // setFront(res.data.body.sum.totalFront)
+                    // setBack(res.data.body.sum.totalBack)
+                    // seTtotal(res.data.body.sum.total)
+                    // setROI(res.data.body.sum.totalSalesPrice)
+                    // setUser((prev: any) => ({ ...prev, soldvalue: res.data?.body?.updateArray.length }))
+                    console.log('date Post responce', res)
+                    setLoading(false)
+                })
+                .catch((error) => {
+                    setLoading(false)
+                    toastify(
+                        'failure',
+                        error.response?.data?.message?.length > 0
+                            ? error.response.data.message
+                            : 'Something went wrong'
+                    )
+                }
+                );
         }
- 
-        setLoading(true)
-        // let userInfo = {
-        //     data: {
-        //         type: type,
-        //         ID: Number(ID)
-        //     }
-        // }
-        axios
-            .post(`${url}/drm-dashboard`, bodyData, {
-                headers: {
-                    authorization: `Bearer ${authToken}`,
-                },
-            })
-            .then((res) => {
-                setData(res?.data?.body?.data)
-                // setData(res.data.body.updateArray);
-                // setFront(res.data.body.sum.totalFront)
-                // setBack(res.data.body.sum.totalBack)
-                // seTtotal(res.data.body.sum.total)
-                // setROI(res.data.body.sum.totalSalesPrice)
-                // setUser((prev: any) => ({ ...prev, soldvalue: res.data?.body?.updateArray.length }))
-                console.log('date Post responce', res)
-                setLoading(false)
-            })
-            .catch((error) => {
-                setLoading(false)
-                toastify(
-                    'failure',
-                    error.response?.data?.message?.length > 0
-                        ? error.response.data.message
-                        : 'Something went wrong'
-                )
+        else {
+            let userInfo = {
+                data: {
+                    actionType:'dealerWiseFilter',
+                    type: type1,
+                    ID: selectedDealerID!=='All' ? Number(type1.val) : ID
+                }
             }
-            );
+            setLoading(true)
+            axios
+                .post(`${url}/drm-dashboard`, userInfo, {
+                    headers: {
+                        authorization: `Bearer ${authToken}`,
+                    },
+                })
+                .then((res) => {
+                    setData(res?.data?.body?.data)
+                    setLoading(false)
+                    // console.log('res', res)
+                    // setData(res.data.body.data)
+                    // setLoading(false)
+                    // setTotalLead(res?.data?.body?.data?.totalLead)
+                    // setCustomerResponsed(res?.data?.body?.data?.customerNoResponded)
+                }
+                )
+                .catch((error) => {
+                    setLoading(false)
+                    toastify(
+                        'failure',
+                        error.response.data.message.length > 0
+                            ? error.response.data.message
+                            : 'Something went wrong'
+                    )
+                }
+                );
+        }
+
 
     }
 
@@ -103,6 +132,7 @@ const Dashboard = ({ setUser }: { setUser: Function }) => {
             const url = config['baseHost_backend'] + '/drm-create-user';
             let body = {
                 selectType: {
+                    ID: ID,
                     type: 'corporate'
                 }
             }
@@ -118,11 +148,11 @@ const Dashboard = ({ setUser }: { setUser: Function }) => {
 
     }, [type])
 
-    // const fetchUsersByType = async (val: any) => {
-
-    // }
-
-    // type === 'corporate' && fetchUsersByType(type)
+    const handleDealerSelect = async (e: any) => {
+        setSelectedDealerID(e.target.value)
+       fetchData({functionType:'dealerFilter', val:e.target.value})
+       e.target.value==='All' && setData(null)
+    }
 
     return (
         <div className='containerBox'>
@@ -135,32 +165,16 @@ const Dashboard = ({ setUser }: { setUser: Function }) => {
                     <span>To Date</span>
                     <Form.Control type="datetime-local" className='form-control w-25 date-selecter ' onChange={handleTOYearChange} />
                 </div>
-                <div className=' mt-auto'>
-                    <Button className='filter-btn btn-sm' onClick={fetchData} disabled={!fromDate || !toDate}>
+                {/* <div className=' mt-auto'>
+                    <Button className='filter-btn btn-sm' onClick={() => {fetchData({functionType:'dateFilter',val:""}) }} disabled={!fromDate || !toDate}>
                         {loading ? <Spinner animation='border' variant='primary' /> : 'Filter'}
                     </Button>
                     <Button onClick={() => { setData(null) }} disabled={!data} className='btn btn-light btn-sm'>
                         Reset
                     </Button>
-                </div>
-                {type === 'corporate' && (
-                    <div className=' mt-auto w-25'>
-                        <InputGroup className='input '>
-                            <Form.Select
-                                className='p-2'
-                                size='sm'
-                                aria-describedby='basic-addon1'
-                            // onChange={handleTypeChange}
-                            >
-                                <option value="null">Select dealer</option>
-                                {filteredUsers?.map((filter: any) => (
-                                    <option value={filter.ID}>{filter.first_name + ' ' + filter.last_name}</option>
-                                ))}
-                            </Form.Select>
-                        </InputGroup>
-                    </div>
-                )}
-                {type === 'corporate' && (
+                </div> */}
+              
+              {type === 'corporate' && (
                     <div className=' mt-auto w-25'>
                         <InputGroup className='input '>
                             <Form.Select
@@ -170,11 +184,51 @@ const Dashboard = ({ setUser }: { setUser: Function }) => {
                             // onChange={handleTypeChange}
                             >
                                 <option value="null">Select Location</option>
-                                
+
                             </Form.Select>
                         </InputGroup>
                     </div>
                 )}
+
+                {type === 'corporate' && (<div className=' mt-auto w-25'>
+                    <InputGroup className='input '>
+                        <Form.Select
+                            className='p-2'
+                            size='sm'
+                            aria-describedby='basic-addon1'
+                            onChange={handleDealerSelect}
+                        >
+                            <option value="null">Select Brand</option>
+                            <option >chevrolet</option>
+                        </Form.Select>
+                    </InputGroup>
+                </div>)}
+
+                  {type === 'corporate' && (
+                    <div className=' mt-auto w-25'>
+                        <InputGroup className='input '>
+                            <Form.Select
+                                className='p-2'
+                                size='sm'
+                                aria-describedby='basic-addon1'
+                                onChange={handleDealerSelect}
+                            >
+                                <option value="All">Select dealer</option>
+                                {filteredUsers?.map((filter: any) => (
+                                    <option value={filter.ID}>{filter.first_name + ' ' + filter.last_name + ' ' + filter.ID}</option>
+                                ))}
+                            </Form.Select>
+                        </InputGroup>
+                    </div>
+                )}
+                 <div className=' mt-auto'>
+                    <Button className='filter-btn btn-sm' onClick={() => {fetchData({functionType:'dateFilter',val:""}) }} disabled={!fromDate || !toDate}>
+                        {loading ? <Spinner animation='border' variant='primary' /> : 'Filter'}
+                    </Button>
+                    <Button onClick={() => { setData(null) }} disabled={!data} className='btn btn-light btn-sm'>
+                        Reset
+                    </Button>
+                </div>
             </div>
 
 

@@ -37,8 +37,9 @@ function Report({ dateFiltred }: any) {
         else {
             let userInfo = {
                 data: {
+                    actionType:'dashboardFetch',
                     type: type,
-                    ID: Number(ID)
+                    ID: type==='corporate' ? ID : Number(ID)
                 }
             }
             setLoading(true)
@@ -165,7 +166,7 @@ function Report({ dateFiltred }: any) {
                     </thead>
                     <tbody>
                         {
-                            displayData?.length > 0 ?
+                            displayData?.length >= 0 ?
                                 displayData?.map((data: any, index: any) => (
                                     <>
                                         <tr>
@@ -181,7 +182,7 @@ function Report({ dateFiltred }: any) {
                 <ReactPaginate
                     nextLabel=">>"
                     onPageChange={handlePageClick}
-                    pageCount={data?.vehicleByYear?.length > rowPerPage ? pageCount : 1}
+                    pageCount={data?.vehicleByYear?.length >= rowPerPage ? pageCount : 1}
                     previousLabel="<<"
                     containerClassName='pagination'
                     pageClassName={filter === 'All' ? 'pagination' : 'page-item disabled'}
