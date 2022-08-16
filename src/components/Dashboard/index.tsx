@@ -52,7 +52,7 @@ const Dashboard = ({ setUser }: { setUser: Function }) => {
                 dateRange: {
                     dateFrom: iso1,
                     dateto: iso2,
-                    type: type1,
+                    type: type,
                     ID: type==='corporate' ? ID : Number(ID)
                 }
             }
