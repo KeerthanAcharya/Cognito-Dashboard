@@ -1,3 +1,8 @@
+.containerBox{
+    position: relative;
+}
+
+
 
 .date-selecter{
     /* height:  !important; */
@@ -23,4 +28,21 @@
 }
 .mt-10{
     padding-top: 100px;
+}
+.size{
+    width: 200px !important;
+}
+.filter-count{
+    position: relative;
+    /* top: -20px; */
+    color: rgb(255, 255, 255);
+    left: 57px;
+    top: 5px;
+    background-color: rgb(250, 0, 0);
+    font-size: 12px;
+    border-radius: 20px;
+    display: inline-block !important;
+    height: fit-content;
+    
+    padding:0px 5px;
 }

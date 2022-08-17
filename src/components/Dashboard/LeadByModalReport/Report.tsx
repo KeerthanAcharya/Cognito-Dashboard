@@ -45,7 +45,7 @@ function Report({ dateFiltred }: any) {
                 data: {
                     actionType: 'dashboardFetch',
                     type: type,
-                    ID: type==='corporate' ? ID : Number(ID)
+                    ID: type === 'corporate' ? ID : Number(ID)
                 }
             }
             setLoading(true)
@@ -257,6 +257,7 @@ function Report({ dateFiltred }: any) {
 
                 </table>
                 <ReactPaginate
+                   
                     nextLabel=">>"
                     onPageChange={handlePageClick}
                     pageCount={data?.carModel?.length >= rowPerPage ? pageCount : 1}
