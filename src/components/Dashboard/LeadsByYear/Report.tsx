@@ -71,14 +71,14 @@ function Report({ dateFiltred }: any) {
         if (data && displayData) {
             console.log('display data', displayData)
             console.log('data2', data)
-            const labelValue = filter === 'All' ? data?.vehicleByYear.filter((vehicle: any) => typeof (vehicle._id) === 'string' && vehicle._id.split('').length === 4).sort((a: any, b: any) => (a._id > b._id) ? -1 : 1).map((vehicle: any) => vehicle._id) : displayData?.map((vehicle: any) => vehicle._id)
+            const labelValue = filter === 'All' ? data?.vehicleByYear.filter((vehicle: any) => typeof (vehicle._id) === 'string' ? vehicle._id.split('').length === 4 : vehicle._id.toString().split('').length===4).sort((a: any, b: any) => (a._id > b._id) ? -1 : 1).map((vehicle: any) => vehicle._id) : displayData?.map((vehicle: any) => vehicle._id)
             setBarXlength(labelValue.length)
             setmyData({
                 labels: labelValue,
                 datasets: [
                     {
                         label: 'Percentage',
-                        data: filter === 'All' ? data?.vehicleByYear.filter((vehicle: any) => typeof (vehicle._id) === 'string' && vehicle._id.split('').length === 4).sort((a: any, b: any) => (a._id > b._id) ? -1 : 1).map((vehicle: any) => (Math.ceil(vehicle.percent))) : displayData?.map((vehicle: any) => (Math.ceil(vehicle.percent))),
+                        data: filter === 'All' ? data?.vehicleByYear.filter((vehicle: any) => typeof (vehicle._id) === 'string' ? vehicle._id.split('').length === 4 : vehicle._id.toString().split('').length===4).sort((a: any, b: any) => (a._id > b._id) ? -1 : 1).map((vehicle: any) => (Math.ceil(vehicle.percent))) : displayData?.map((vehicle: any) => (Math.ceil(vehicle.percent))),
                         backgroundColor: ['blue'],
                         barThickness: 40,
                         tension: 0.5
@@ -96,7 +96,7 @@ function Report({ dateFiltred }: any) {
         if (data) {
             if (filter === 'All') {
                 data?.vehicleByYear
-                    .filter((vehicle: any) => typeof (vehicle._id) === 'string' && vehicle._id.split('').length === 4)
+                    .filter((vehicle: any) => typeof (vehicle._id) === 'string' ? vehicle._id.split('').length === 4 : vehicle._id.toString().split('').length===4)
                     .sort((a: any, b: any) =>
                         (a._id > b._id) ? -1 : 1)
                     .slice(pageVisited, pageVisited + rowPerPage)

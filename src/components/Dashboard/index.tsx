@@ -57,7 +57,7 @@ const Dashboard = ({ setUser }: { setUser: Function }) => {
     let val = 0;
     Object.entries(filters).forEach(
         ([key, value]) => {
-            value && value!=="null" && value!=="All" && val++
+            value && value !== "null" && value !== "All" && val++
             console.log('Filter payload 2', key, value)
         }
 
@@ -85,7 +85,8 @@ const Dashboard = ({ setUser }: { setUser: Function }) => {
         // setFilters({ ...filters, brand: null })
         // setFilters({})
     }
-    const fetchData = () => {
+    const fetchData = (e: any) => {
+        e.preventDefault();
         let dateStr
         let iso1;
         let iso2;
@@ -101,6 +102,7 @@ const Dashboard = ({ setUser }: { setUser: Function }) => {
         }
 
         let bodyData = {
+            actionType: "masterFilter",
             dateFrom: fromDate ? iso1 : null,
             dateto: toDate ? iso2 : null,
             brand: brand,
@@ -111,124 +113,35 @@ const Dashboard = ({ setUser }: { setUser: Function }) => {
         }
         console.log('Filter payload 1', bodyData)
 
-        setLoading(true)
-        // axios
-        //     .post(`${url}/drm-dashboard`, bodyData, {
-        //         headers: {
-        //             authorization: `Bearer ${authToken}`,
-        //         },
-        //     })
-        //     .then((res) => {
-        //         setData(res?.data?.body?.data)
-        //         // setData(res.data.body.updateArray);
-        //         // setFront(res.data.body.sum.totalFront)
-        //         // setBack(res.data.body.sum.totalBack)
-        //         // seTtotal(res.data.body.sum.total)
-        //         // setROI(res.data.body.sum.totalSalesPrice)
-        //         // setUser((prev: any) => ({ ...prev, soldvalue: res.data?.body?.updateArray.length }))
-        //         console.log('date Post responce', res)
-        //         setLoading(false)
-        //     })
-        //     .catch((error) => {
-        //         setLoading(false)
-        //         toastify(
-        //             'failure',
-        //             error.response?.data?.message?.length > 0
-        //                 ? error.response.data.message
-        //                 : 'Something went wrong'
-        //         )
-        //     })
+        setLoading(true);
+        axios
+            .post(`${url}/drm-dashboard`, bodyData, {
+                headers: {
+                    authorization: `Bearer ${authToken}`,
+                },
+            })
+            .then((res) => {
+                setData(res?.data?.body?.data)
+                // setData(res.data.body.updateArray);
+                // setFront(res.data.body.sum.totalFront)
+                // setBack(res.data.body.sum.totalBack)
+                // seTtotal(res.data.body.sum.total)
+                // setROI(res.data.body.sum.totalSalesPrice)
+                // setUser((prev: any) => ({ ...prev, soldvalue: res.data?.body?.updateArray.length }))
+                console.log('date Post responce', res)
+                setLoading(false)
+            })
+            .catch((error) => {
+                setLoading(false)
+                toastify(
+                    'failure',
+                    error.response?.data?.message?.length > 0
+                        ? error.response.data.message
+                        : 'Something went wrong'
+                )
+            })
     }
 
-
-
-    // const fetchData = (type1: any) => {
-    //     if (type1.functionType === 'dateFilter') {
-    //         let dateStr
-    //         dateStr = new Date(fromDate);
-    //         const iso1 = dateStr.toISOString();
-
-    //         let dateStr1
-    //         dateStr1 = new Date(toDate);
-    //         const iso2 = dateStr1.toISOString();
-
-    //         let bodyData = {
-    //             dateRange: {
-    //                 dateFrom: iso1,
-    //                 dateto: iso2,
-    //                 type: type,
-    //                 ID: type === 'corporate' ? ID : Number(ID)
-    //             }
-    //         }
-
-    //         setLoading(true)
-    //         axios
-    //             .post(`${url}/drm-dashboard`, bodyData, {
-    //                 headers: {
-    //                     authorization: `Bearer ${authToken}`,
-    //                 },
-    //             })
-    //             .then((res) => {
-    //                 setData(res?.data?.body?.data)
-    //                 // setData(res.data.body.updateArray);
-    //                 // setFront(res.data.body.sum.totalFront)
-    //                 // setBack(res.data.body.sum.totalBack)
-    //                 // seTtotal(res.data.body.sum.total)
-    //                 // setROI(res.data.body.sum.totalSalesPrice)
-    //                 // setUser((prev: any) => ({ ...prev, soldvalue: res.data?.body?.updateArray.length }))
-    //                 console.log('date Post responce', res)
-    //                 setLoading(false)
-    //             })
-    //             .catch((error) => {
-    //                 setLoading(false)
-    //                 toastify(
-    //                     'failure',
-    //                     error.response?.data?.message?.length > 0
-    //                         ? error.response.data.message
-    //                         : 'Something went wrong'
-    //                 )
-    //             }
-    //             );
-    //     }
-    //     else {
-    //         let userInfo = {
-    //             data: {
-    //                 actionType: 'dealerWiseFilter',
-    //                 type: type1,
-    //                 ID: selectedDealerID !== 'All' ? Number(type1.val) : ID
-    //             }
-    //         }
-    //         setLoading(true)
-    //         axios
-    //             .post(`${url}/drm-dashboard`, userInfo, {
-    //                 headers: {
-    //                     authorization: `Bearer ${authToken}`,
-    //                 },
-    //             })
-    //             .then((res) => {
-    //                 setData(res?.data?.body?.data)
-    //                 setLoading(false)
-    //                 // console.log('res', res)
-    //                 // setData(res.data.body.data)
-    //                 // setLoading(false)
-    //                 // setTotalLead(res?.data?.body?.data?.totalLead)
-    //                 // setCustomerResponsed(res?.data?.body?.data?.customerNoResponded)
-    //             }
-    //             )
-    //             .catch((error) => {
-    //                 setLoading(false)
-    //                 toastify(
-    //                     'failure',
-    //                     error.response.data.message.length > 0
-    //                         ? error.response.data.message
-    //                         : 'Something went wrong'
-    //                 )
-    //             }
-    //             );
-    //     }
-
-
-    // }
 
     useEffect(() => {
         if (type === 'corporate') {
@@ -261,19 +174,19 @@ const Dashboard = ({ setUser }: { setUser: Function }) => {
     console.log('dealers', filteredDealersAndStates)
 
     return (
-        
-            <div className='containerBox'>
-                
-                <form className='d-flex flex-row justify-content-left shadow-sm bg-light p-3 filter-header' ref={fromDateControl}>
-                    <div className=' pl-3'>
-                        <span>From Date</span>
-                        <Form.Control type="datetime-local" className='form-control w-25  size date-selecter ' onChange={handleFromYearChange} />
-                    </div>
-                    <div className=''>
-                        <span>To Date</span>
-                        <Form.Control type="datetime-local" className='form-control w-25  size date-selecter ' onChange={handleTOYearChange} />
-                    </div>
-                    {/* <div className=' mt-auto'>
+
+        <div className='containerBox'>
+
+            <form className='d-flex flex-row justify-content-left shadow-sm bg-light p-3 filter-header' onSubmit={fetchData} ref={fromDateControl}>
+                <div className=' pl-3'>
+                    <span>From Date</span>
+                    <Form.Control type="datetime-local" className='form-control w-25  size date-selecter p-1' onChange={handleFromYearChange} />
+                </div>
+                <div className=''>
+                    <span>To Date</span>
+                    <Form.Control type="datetime-local" className='form-control w-25  size date-selecter p-1' onChange={handleTOYearChange} />
+                </div>
+                {/* <div className=' mt-auto'>
                     <Button className='filter-btn btn-sm' onClick={() => {fetchData({functionType:'dateFilter',val:""}) }} disabled={!fromDate || !toDate}>
                         {loading ? <Spinner animation='border' variant='primary' /> : 'Filter'}
                     </Button>
@@ -281,122 +194,122 @@ const Dashboard = ({ setUser }: { setUser: Function }) => {
                         Reset
                     </Button>
                 </div> */}
-
-                    {type === 'corporate' && (
-                        <div className=' mt-auto w-25 size'>
-                            <InputGroup className='input '>
-                                <Form.Select
-                                    className='p-2'
-                                    size='sm'
-                                    aria-describedby='basic-addon1'
-                                    onChange={(e) => { setLocation(e.target.value); setFilters({ ...filters, location: e.target.value }) }}
-                                >
-                                    <option value="null">Select Location</option>
-                                    {filteredDealersAndStates?.filterdStatesandDealer?.map((filter: any) => (
-                                        <option value={filter._id.state}>{filter._id.state}</option>
-                                    ))}
-                                </Form.Select>
-                            </InputGroup>
-                        </div>
-                    )}
-
-                    {type === 'corporate' && (<div className=' mt-auto w-25 size'>
+                {type === 'corporate' && (
+                    <div className=' mt-auto w-25 size'>
                         <InputGroup className='input '>
                             <Form.Select
                                 className='p-2'
                                 size='sm'
                                 aria-describedby='basic-addon1'
-                                onChange={(e) => { setBrand(e.target.value); setFilters({ ...filters, brand: e.target.value }) }}
+                                onChange={(e) => { setLocation(e.target.value); setFilters({ ...filters, location: e.target.value }) }}
                             >
-                                <option value="null">Select Brand</option>
-                                {filteredDealersAndStates?.brand?.filter((data: any) => data._id).map((filter: any) => (
-                                    <option value={filter._id}>{filter._id}</option>
+                                <option value="null">Select Location</option>
+                                {filteredDealersAndStates?.filterdStatesandDealer?.map((filter: any) => (
+                                    <option value={filter._id.state}>{filter._id.state}</option>
                                 ))}
                             </Form.Select>
                         </InputGroup>
-                    </div>)}
-
-                    {type === 'corporate' && (
-                        <div className=' mt-auto w-25 size'>
-                            <InputGroup className='input '>
-                                <Form.Select
-                                    className='p-2'
-                                    size='sm'
-                                    aria-describedby='basic-addon1'
-                                    onChange={handleDealerSelect}
-                                >
-                                    <option value="All">Select dealer</option>
-                                    {filteredDealersAndStates?.filterdStatesandDealer?.map((filter: any) => (
-                                        <option value={filter._id.dealerID}>{filter._id.first_name + ' ' + filter._id.last_name}</option>
-                                    ))}
-                                </Form.Select>
-                            </InputGroup>
-                        </div>
-                    )}
-                    <div className=' d-flex flex-row'>
-                        {filterCount !== 0 && (
-                            <span className='filter-count'>{filterCount}</span>
-                        )}
-
-                        <Button className='filter-btn btn-sm mb-auto mt-auto' onClick={fetchData}
-                        // disabled={!fromDate || !toDate}
-                        >
-
-                            {'Filter'}
-                        </Button>
-
-                        <Button onClick={() => {
-                            // setData(null);
-                            // setFromDate(null)
-                            fromDateControl.current.reset()
-                            clearForm()
-                        }}
-                            // disabled={!data}
-                            className='btn btn-light btn-sm mb-auto mt-auto'>
-                            Reset
-                        </Button>
                     </div>
-                </form>
+                )}
+
+                {type === 'corporate' && (<div className=' mt-auto w-25 size'>
+                    <InputGroup className='input '>
+                        <Form.Select
+                            className='p-2'
+                            size='sm'
+                            aria-describedby='basic-addon1'
+                            onChange={(e) => { setBrand(e.target.value); setFilters({ ...filters, brand: e.target.value }) }}
+                        >
+                            <option value="null">Select Brand</option>
+                            {filteredDealersAndStates?.brand?.filter((data: any) => data._id).map((filter: any) => (
+                                <option value={filter._id}>{filter._id}</option>
+                            ))}
+                        </Form.Select>
+                    </InputGroup>
+                </div>)}
+
+                {type === 'corporate' && (
+                    <div className=' mt-auto w-25 size'>
+                        <InputGroup className='input '>
+                            <Form.Select
+                                className='p-2'
+                                size='sm'
+                                aria-describedby='basic-addon1'
+                                onChange={handleDealerSelect}
+                            >
+                                <option value="All">Select dealer</option>
+                                {filteredDealersAndStates?.filterdStatesandDealer?.map((filter: any) => (
+                                    <option value={filter._id.dealerID}>{filter._id.first_name + ' ' + filter._id.last_name}</option>
+                                ))}
+                            </Form.Select>
+                        </InputGroup>
+                    </div>
+                )}
+                <div className=' d-flex flex-row'>
+                    {filterCount !== 0 && (
+                        <span className='filter-count'>{filterCount}</span>
+                    )}
+
+                    <Button className='filter-btn btn-sm mb-auto mt-auto' type='submit'
+                    // onClick={fetchData}
+                    // disabled={!fromDate || !toDate}
+                    >
+
+                        {'Filter'}
+                    </Button>
+
+                    <Button onClick={() => {
+                        setData(null);
+                        // setFromDate(null)
+                        fromDateControl.current.reset()
+                        clearForm()
+                    }}
+                        // disabled={!data}
+                        className='btn btn-light btn-sm mb-auto mt-auto'>
+                        Reset
+                    </Button>
+                </div>
+            </form>
 
 
-                <LoadingBar isActive={loading}/>
-                <Row className='spacing-1 mt-10'>
-                    <Col>
-                        {/* <h2 className='font-weight-bold p-3'>Lead Generated Report</h2> */}
-                        <LeadGeneratedReport dateFiltred={data && data} />
-                    </Col>
-                </Row>
+            <LoadingBar isActive={loading} />
+            <Row className='spacing-1 mt-10'>
+                <Col>
+                    {/* <h2 className='font-weight-bold p-3'>Lead Generated Report</h2> */}
+                    <LeadGeneratedReport dateFiltred={data && data} />
+                </Col>
+            </Row>
 
-                <Row className='spacing-1 my-3 pl-3'>
-                    <Col>
-                        {/* <h2 className='font-weight-bold p-3'>Lead By Model Report</h2> */}
-                        <LeadByModelReport dateFiltred={data && data} />
-                    </Col>
-                </Row>
+            <Row className='spacing-1 my-3 pl-3'>
+                <Col>
+                    {/* <h2 className='font-weight-bold p-3'>Lead By Model Report</h2> */}
+                    <LeadByModelReport dateFiltred={data && data} />
+                </Col>
+            </Row>
 
-                <Row className='spacing-1 my-3 p-3'>
-                    <Col>
-                        {/* <h2 className='font-weight-bold'>Leads by Year</h2> */}
-                        <LeadByYear dateFiltred={data && data} />
-                    </Col>
-                </Row>
-                <Row className='spacing-1 my-3 p-3'>
-                    <Col>
-                        {/* <h2 className='font-weight-bold'>BDC Stats</h2> */}
-                        <BdcStats dateFiltred={data && data} />
-                    </Col>
-                </Row>
+            <Row className='spacing-1 my-3 p-3'>
+                <Col>
+                    {/* <h2 className='font-weight-bold'>Leads by Year</h2> */}
+                    <LeadByYear dateFiltred={data && data} />
+                </Col>
+            </Row>
+            <Row className='spacing-1 my-3 p-3'>
+                <Col>
+                    {/* <h2 className='font-weight-bold'>BDC Stats</h2> */}
+                    <BdcStats dateFiltred={data && data} />
+                </Col>
+            </Row>
 
-                <Row className='spacing-1 mt-3 p-3'>
-                    <Col>
-                        <Report setUser={setUser} />
-                    </Col>
-                </Row>
-
-
+            <Row className='spacing-1 mt-3 p-3'>
+                <Col>
+                    <Report setUser={setUser} />
+                </Col>
+            </Row>
 
 
-                {/* <Row className='spacing-1'>
+
+
+            {/* <Row className='spacing-1'>
                     <Col>
                         <h3>Bot ROs:</h3>
                         <p
@@ -472,8 +385,8 @@ const Dashboard = ({ setUser }: { setUser: Function }) => {
 
 
 
-            </div >
-   
+        </div >
+
     );
 };
 export default Dashboard;
